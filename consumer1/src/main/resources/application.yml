@@ -1,5 +1,5 @@
 server:
-  port: 9002
+  port: 9003
 spring:
   application:
     name: kafka
@@ -19,22 +19,12 @@ spring:
 # ????key??????????
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#### kafka????? end ####
   logs:
     kafka:
       bootstrap-servers: 192.168.22.211:32092
-      consumer:
-        group-id: test1
-        # smallest?largest??????smallest??0????????largest?logfile?offset??????????????smallest
-        auto-offset-reset: earliest
-        # enable.auto.commit:true --> ??????offset
-        enable-auto-commit: true
-        #??'enable.auto.commit'?true????????????Kafka????????????????5000?
-        auto-commit-interval: 1000
-        # ????key??????????
-        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-        value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-
+      group-id: test
+      enable-auto-commit: true
+#### kafka????? end ####
 logging:
   level:
     com.baomidou.mybatisplus.samples.quickstart: info

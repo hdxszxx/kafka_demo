@@ -4,6 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 /**
  * @author zxx
  * @version 1.0
@@ -12,21 +17,76 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/kafka/")
 public class KafkaController {
-    @Autowired
+
+    @Resource
     private KafkaTemplate<String, Object> kafkaTemplate;
+
+    @Resource
+    private KafkaTemplate<String, Object> kafkaLogTemplate;
+
+    @Autowired
+    private List<KafkaTemplate> kafkaTemplates;
+
+    ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(50);
 
     @GetMapping("send")
     @ResponseBody
-    public boolean send(@RequestParam String message) {
+    public boolean send(@RequestParam Integer num) {
         try {
-            kafkaTemplate.send("test-topic", message);
-            kafkaTemplate.send("test-topic2", message);
-            System.out.println("消息发送成功...");
+            System.out.println(kafkaTemplates.size());
+            for (int i = 1; i <= num;i++) {
+                String a = String.valueOf(i);
+                threadPoolExecutor.execute(() -> {
+                    kafkaTemplate.send("text.Partitions", 0, a, "0");
+                    System.out.println("消息发送成功...");
+                });
+                Thread.sleep(10);
+            }
+//            kafkaTemplate.send("test-topic2", message);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
     }
+
+    @GetMapping("send1")
+    @ResponseBody
+    public boolean send1(@RequestParam Integer num) {
+        try {
+            for (int i = 1; i <= num;i++) {
+                String a = String.valueOf(i);
+                threadPoolExecutor.execute(() -> {
+                    kafkaTemplate.send("text.Partitions", 1, a, "1");
+                    System.out.println("消息发送成功...");
+                });
+                Thread.sleep(10);
+            }
+//            kafkaTemplate.send("test-topic2", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @GetMapping("send/logs")
+    @ResponseBody
+    public boolean sendLogs(@RequestParam Integer num) {
+        try {
+            for (int i = 1; i <= num;i++) {
+                String a = String.valueOf(i);
+                threadPoolExecutor.execute(() -> {
+                    kafkaLogTemplate.send("text.Partitions", 0, a, "Logs-0");
+                    System.out.println("消息发送成功...");
+                });
+                Thread.sleep(10);
+            }
+//            kafkaTemplate.send("test-topic2", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     @GetMapping("test")
     @ResponseBody
     public String test() {

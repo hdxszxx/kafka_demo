@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 //@KafkaListener(topicPartitions = {
 //        @TopicPartition(topic = "text.Partitions", partitions = "0-1")
 //})
-@KafkaListener(topics = "text.Partitions", containerFactory="kafkaListenerContainerFactoryBizSchedule")
-//@KafkaListener(topics = "text.Partitions")
+@KafkaListener(topics = "text.Partitions")
 public class ConsumerListener {
 
 
