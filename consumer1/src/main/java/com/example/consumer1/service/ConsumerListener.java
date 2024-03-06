@@ -1,4 +1,4 @@
-package com.example.consumer.service;
+package com.example.consumer1.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaHandler;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 //@KafkaListener(topicPartitions = {
 //        @TopicPartition(topic = "text.Partitions", partitions = "0-1")
 //})
-@KafkaListener(topics = "text.Partitions")
+@KafkaListener(topics = "text.Partitions", containerFactory="kafkaListenerContainerFactoryBizSchedule")
 public class ConsumerListener {
 
 

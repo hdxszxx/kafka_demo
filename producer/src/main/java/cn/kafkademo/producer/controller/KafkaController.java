@@ -87,6 +87,25 @@ public class KafkaController {
         return true;
     }
 
+    @GetMapping("send1/logs")
+    @ResponseBody
+    public boolean send1Logs(@RequestParam Integer num) {
+        try {
+            for (int i = 1; i <= num;i++) {
+                String a = String.valueOf(i);
+                threadPoolExecutor.execute(() -> {
+                    kafkaLogTemplate.send("text.Partitions", 1, a, "Logs-1");
+                    System.out.println("消息发送成功...");
+                });
+                Thread.sleep(10);
+            }
+//            kafkaTemplate.send("test-topic2", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     @GetMapping("test")
     @ResponseBody
     public String test() {
